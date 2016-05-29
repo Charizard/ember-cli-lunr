@@ -1,7 +1,7 @@
 {
   "name": "ember-cli-lunr",
   "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "Simple full-text search for ember-cli apps.",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -11,7 +11,7 @@
     "start": "ember server",
     "test": "ember try:testall"
   },
-  "repository": "",
+  "repository": "https://github.com/Charizard/ember-cli-lunr",
   "engines": {
     "node": ">= 0.10.0"
   },
@@ -38,10 +38,16 @@
     "ember-try": "~0.0.8"
   },
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "search",
+    "client-side-search",
+    "lunr-js",
+    "lunr",
+    "text-search"
   ],
   "dependencies": {
-    "ember-cli-babel": "^5.1.5"
+    "ember-cli-babel": "^5.1.5",
+    "lunr": "0.7.1"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
