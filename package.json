@@ -46,8 +46,7 @@
     "text-search"
   ],
   "dependencies": {
-    "ember-cli-babel": "^5.1.5",
-    "lunr": "0.7.1"
+    "ember-cli-babel": "^5.1.5"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
