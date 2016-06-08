@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-lunr",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Simple full-text search for ember-cli apps.",
   "directories": {
     "doc": "doc",
