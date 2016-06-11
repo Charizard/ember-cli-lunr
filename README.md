@@ -1,4 +1,5 @@
-# Ember-cli-lunr
+# ember-cli-lunr
+[![npm version](https://badge.fury.io/js/ember-cli-lunr.svg)](https://badge.fury.io/js/ember-cli-lunr) [![Code Climate](https://codeclimate.com/github/Charizard/ember-cli-lunr/badges/gpa.svg)](https://codeclimate.com/github/Charizard/ember-cli-lunr)
 
 Simple full-text search for ember-cli apps using [lunr.js](http://lunrjs.com/).
 
