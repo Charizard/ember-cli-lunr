@@ -23,8 +23,8 @@ moduleForModel('post', 'Post Model', {
 test('Post is indexable', function (assert) {
   var post = this.subject({title: 'A title for a post', body: 'A body for post.'});
 
-  assert.ok(post.indexableKeys.includes('id'), 'indexableKeys contains "id"');
-  assert.ok(post.indexableKeys.includes('title'), 'indexableKeys contains "title"');
+  assert.ok(post.get('indexableKeys').indexOf('id') > -1, 'indexableKeys contains "id"');
+  assert.ok(post.get('indexableKeys').indexOf('title') > -1, 'indexableKeys contains "title"');
 });
 
 test('Post is indexed on didCreate', function (assert) {

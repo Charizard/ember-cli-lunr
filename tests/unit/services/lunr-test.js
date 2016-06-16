@@ -15,7 +15,7 @@ test('it has indexes', function(assert) {
 test('createIndex method', function(assert) {
   let service = this.subject();
 
-  service.createIndex('post')
+  service.createIndex('post');
 
   assert.notOk(isEmpty(service.indexes['post']), "creates and stores the index in indexes object");
 });

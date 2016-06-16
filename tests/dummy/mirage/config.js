@@ -23,13 +23,5 @@ export default function() {
     this.put('/posts/:id'); // or this.patch
     this.del('/posts/:id');
   */
-  this.post('/posts', (schema, request) => {
-    var params = JSON.parse(request.requestBody);
-
-    if (!params.post.title) {
-      return new Mirage.Response(422, {some: 'header'}, {errors: {title: ['cannot be blank']}});
-    } else {
-      return schema.post.create(params.post);
-    }
-  });
+  this.post('/posts');
 }
