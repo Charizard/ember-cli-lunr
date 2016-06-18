@@ -1,4 +1,5 @@
 /* global lunr */
+import lookup from '../utils/lookup';
 
 var postIndexData = function() {
   this.ref('id');
@@ -12,7 +13,7 @@ export default {
   name: 'indexPost',
 
   initialize: function(application) {
-    var lunr = application.lookup('service:lunr');
+    var lunr = lookup(application, 'service:lunr');
 
     lunr.createIndex('post', postIndexData);
   }
