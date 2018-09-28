@@ -1,13 +1,11 @@
 import { visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
+import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 
 module('Acceptance | model indexing', function(hooks) {
   setupApplicationTest(hooks);
-
-  hooks.beforeEach(function() {
-    this.container = this.application.__container__;
-  });
+  setupMirage(hooks);
 
   test('index when a model is created', async function(assert) {
     assert.expect(1);
@@ -26,7 +24,7 @@ module('Acceptance | model indexing', function(hooks) {
       body: "sample body"
     });
 
-    post.save();
+    await post.save();
   });
 
   // Test for when a model is updated and deleted

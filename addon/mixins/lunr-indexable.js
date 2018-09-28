@@ -4,8 +4,11 @@ import { on } from '@ember/object/evented';
 
 export default Mixin.create({
   lunr: service(),
-  concatenatedProperties: ['indexableKeys'],
-  indexableKeys: ['id'],
+  init() {
+    this._super(...arguments);
+    this.concatenatedProperties = ['indexableKeys'];
+    this.indexableKeys = ['id'];
+  },
 
   indexRecord: on('didCreate', 'didLoad', function() {
     var type = this.constructor.modelName,

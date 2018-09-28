@@ -7,7 +7,8 @@ export default DS.Model.extend(LunrIndexable, {
 
   init() {
     this._super(...arguments);
-    self.indexableKeys = ['title'];
+    // already initialized via  mixin
+    this.indexableKeys.push('title');
   }
 
 });
