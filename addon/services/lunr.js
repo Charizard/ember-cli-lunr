@@ -5,7 +5,10 @@ import Evented from '@ember/object/evented';
 import Service from '@ember/service';
 
 export default Service.extend(Evented, {
-  indexes: {},
+  init() {
+    this._super(...arguments);
+    this.indexes = {};
+  },
 
   createIndex: function(type, structure) {
     this.indexes[type] = lunr(structure);

@@ -5,5 +5,9 @@ export default DS.Model.extend(LunrIndexable, {
   title: DS.attr('string'),
   body: DS.attr('string'),
 
-  indexableKeys: ['title']
+  init() {
+    this._super(...arguments);
+    self.indexableKeys = ['title'];
+  }
+
 });
