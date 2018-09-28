@@ -1,8 +1,0 @@
-{
-  "name": "ember-cli-lunr",
-  "dependencies": {
-  },
-  "devDependencies": {
-    "lunr.js": "0.7.1"
-  }
-}
