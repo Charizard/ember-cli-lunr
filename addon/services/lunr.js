@@ -1,8 +1,10 @@
 /* global lunr */
 
-import Ember from 'ember';
+import Evented from '@ember/object/evented';
 
-export default Ember.Service.extend(Ember.Evented, {
+import Service from '@ember/service';
+
+export default Service.extend(Evented, {
   indexes: {},
 
   createIndex: function(type, structure) {

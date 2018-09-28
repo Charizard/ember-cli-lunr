@@ -1,8 +1,9 @@
-import Ember from 'ember';
-const { on } = Ember;
+import { inject as service } from '@ember/service';
+import Mixin from '@ember/object/mixin';
+import { on } from '@ember/object/evented';
 
-export default Ember.Mixin.create({
-  lunr: Ember.inject.service(),
+export default Mixin.create({
+  lunr: service(),
   concatenatedProperties: ['indexableKeys'],
   indexableKeys: ['id'],
 
