@@ -1,32 +1,31 @@
-import { test } from 'qunit';
-import moduleForAcceptance from '../../tests/helpers/module-for-acceptance';
+import { visit } from '@ember/test-helpers';
+import { module, test } from 'qunit';
+import { setupApplicationTest } from 'ember-qunit';
+import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 
-moduleForAcceptance('Acceptance | model indexing', {
-  beforeEach() {
-    this.container = this.application.__container__;
-  }
-});
+module('Acceptance | model indexing', function(hooks) {
+  setupApplicationTest(hooks);
+  setupMirage(hooks);
 
-test('index when a model is created', function(assert) {
-  assert.expect(1);
+  test('index when a model is created', async function(assert) {
+    assert.expect(1);
 
-  let store = this.container.lookup('service:store');
-  let lunrService = this.container.lookup('service:lunr');
+    let store = this.owner.lookup('service:store');
+    let lunrService = this.owner.lookup('service:lunr');
 
-  lunrService.on('didIndexRecord', function() {
-    assert.ok(true, "creating a post indexes it");
-  });
+    lunrService.on('didIndexRecord', function() {
+      assert.ok(true, "creating a post indexes it");
+    });
 
-  // This is to make sure the instance-initializer is run.
-  visit('/');
-  andThen(function() {
+    // This is to make sure the instance-initializer is run.
+    await visit('/');
     let post = store.createRecord('post', {
       title: "Sample title",
       body: "sample body"
     });
 
-    post.save();
+    await post.save();
   });
-});
 
-// Test for when a model is updated and deleted
+  // Test for when a model is updated and deleted
+});

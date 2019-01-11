@@ -1,12 +1,15 @@
-/* global lunr */
+import Lunr from 'lunr';
+import Evented from '@ember/object/evented';
+import Service from '@ember/service';
 
-import Ember from 'ember';
-
-export default Ember.Service.extend(Ember.Evented, {
-  indexes: {},
+export default Service.extend(Evented, {
+  init() {
+    this._super(...arguments);
+    this.indexes = {};
+  },
 
   createIndex: function(type, structure) {
-    this.indexes[type] = lunr(structure);
+    this.indexes[type] = Lunr(structure);
   },
 
   add: function(type, dataHash) {
