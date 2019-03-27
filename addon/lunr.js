@@ -19,7 +19,7 @@ export default EmberObject.extend({
 
       // Declare fields for lunr
       if (isEmpty(properties) && model) {
-        model.constructor.attributes.forEach((_, name) => {
+        get(model, 'constructor.attributes').forEach((_, name) => {
           this.field(name);
         });
         documents = models;
