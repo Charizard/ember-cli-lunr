@@ -17,65 +17,60 @@ ember install ember-cli-lunr
 
 ## Configuring
 
-Firstly, you need to create an index for the model you need to search. For more details on the index options refer lunr.js [docs](http://lunrjs.com/docs/#lunr).
+Lunr 2.0 uses immutable index, so, you'll have to have an array of items to be searched beforehand. For usage with Lunr 1.0, see [0.0.5](https://github.com/Charizard/ember-cli-lunr/tree/v0.0.5) of this add-on.
+
+Given a model named post,
 
 ```js
-// app/instance-initializers/index-item.js
-
-// For details about the index data checkout lunr.js
-// documentation
-var itemTitleIndexData = function() {
-  this.ref('id');
-  this.field('title');
-  this.pipeline.remove(lunr.stopWordFilter);
-  this.pipeline.remove(lunr.stemmer);
-};
-
-export default {
-  name: 'indexItem',
-
-  initialize: function(application) {
-    var lunr = application.lookup('service:lunr');
-
-    lunr.createIndex('item', itemTitleIndexData);
-  }
-};
-```
-
-Next, add an indexable mixin to your model and define the indexable keys.
-
-```js
-// app/pods/item/model.js
+// app/pods/post/model.js
 import DS from 'ember-data';
-import LunrIndexableMixin from 'ember-cli-lunr/mixins/lunr-indexable';
 
-var Item = DS.Model.extend(LunrIndexableMixin, {
-  ...
+export default DS.Model.extend({
   title: DS.attr('string'),
-  ...
-  indexableKeys: ['title']
+  body: DS.attr('string'),
 });
 ```
-
-After this, all records creates, updates, deletes on the model are kept track by the lunr index.
-
-Now, you can search anywhere in your app using the lunr service's `search` method. This method is just a wrapper around lunr.js [search]( http://lunrjs.com/docs/#search ) method.
+First, you'll have to create an index with the documents (keep in mind indexes are immutable) using the Lunr class,
 
 ```js
-// app/pods/items/controller.js
-import Ember from 'ember';
+import Lunr from 'ember-cli-lunr/lunr';
+...
+// Pass in models to create method, this indexes all properties on the model.
+let posts = Lunr.create({ models: get(this, 'posts') });
 
-const { computed } = Ember;
+// Or you could specify just the properties that you want to index via the properties key.
+let posts = Lunr.create({ models: get(this, 'posts'), properties: ['title'] });
+```
 
-export default Ember.Controller.extend({
-  lunr: Ember.inject.service(),
+Now, you can search anywhere in your app using the `search` method. This method is just a wrapper around lunr.js [search](https://lunrjs.com/docs/lunr.Index.html) method. For more advanced searching, checkout the lunr.js [guides](https://lunrjs.com/guides/searching.html#scoring).
+
+```js
+posts.search('lorem ipsum');
+```
+
+Putting this all together in a controller,
+
+```js
+// app/pods/posts/controller.js
+import Controller from '@ember/controller';
+import { get, set } from '@ember/object';
+import Lunr from 'ember-cli-lunr/lunr';
+
+export default Controller.extend({
+  // assuming posts array was set on controller from
+  // setupController in route.
+  posts: null,
   searchQuery: null,
 
+  init() {
+    this._super(...arguments);
+    let postsIndex = Lunr.create({ models: get(this, 'posts') });
+    set(this, 'postsIndex', postsIndex);
+  },
+
   result: computed('searchQuery', function() {
-    var lunr = this.get('lunr'),
-        query = this.get('searchQuery'),
-        item = this.get('model'),
-        resultIds = lunr.search('item', query).mapBy('ref');
+    var query = this.get('searchQuery'),
+        resultIds = get(this, 'postsIndex').search(query).mapBy('ref');
 
     return items.filter(function(item) {
       return resultIds.contains(item.get('id'));
