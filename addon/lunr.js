@@ -1,4 +1,5 @@
 import EmberObject, { get, set } from '@ember/object';
+import { A } from '@ember/array';
 import { isEmpty } from '@ember/utils';
 import lunr from 'lunr';
 
@@ -43,8 +44,6 @@ export default EmberObject.extend({
   },
 
   search(query) {
-    let res = get(this, 'index').search(query);
-
-    return Ember.ArrayProxy.create({ content: Ember.A(res) });
+    return A(get(this, 'index').search(query));
   }
 });
