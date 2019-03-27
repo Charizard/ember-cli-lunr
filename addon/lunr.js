@@ -15,6 +15,7 @@ export default EmberObject.extend({
     set(this, 'index', lunr(function () {
       let model = get(models, 'firstObject');
       let documents;
+
       // Declare fields for lunr
       if (isEmpty(properties) && model) {
         model.constructor.attributes.forEach((_, name) => {
@@ -29,6 +30,7 @@ export default EmberObject.extend({
           return model.getProperties(properties);
         });
       }
+
       // Declare reference for lunr
       // TODO: Make id configurable
       this.ref('id');
@@ -41,6 +43,8 @@ export default EmberObject.extend({
   },
 
   search(query) {
-    return get(this, 'index').search(query);
+    let res = get(this, 'index').search(query);
+
+    return Ember.ArrayProxy.create({ content: Ember.A(res) });
   }
 });
