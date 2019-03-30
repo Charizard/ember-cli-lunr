@@ -1,4 +1,4 @@
-import EmberObject, { get, set } from '@ember/object';
+import EmberObject, { get, set, getProperties } from '@ember/object';
 import { A } from '@ember/array';
 import { isEmpty } from '@ember/utils';
 import lunr from 'lunr';
@@ -6,7 +6,8 @@ import lunr from 'lunr';
 export default EmberObject.extend({
   init() {
     let models = get(this, 'models');
-    let properties = get(this, 'properties');
+    // Clone the passed in array to avoid modifying the original one.
+    let properties = (get(this, 'properties') || []).slice(0);
 
     if (isEmpty(models)) {
       throw Error('models passed to Lunr.create is empty');
@@ -19,8 +20,10 @@ export default EmberObject.extend({
 
       // Declare fields for lunr
       if (isEmpty(properties) && model) {
+        properties = [];
         get(model, 'constructor.attributes').forEach((_, name) => {
           this.field(name);
+          properties.push(name);
         });
         documents = models;
       } else {
@@ -36,9 +39,13 @@ export default EmberObject.extend({
       // TODO: Make id configurable
       this.ref('id');
 
+      // id should always be indexed
+      properties.push('id');
+
       // Add documents to the index
       documents.forEach((doc) => {
-        this.add(doc)
+        const data = getProperties(doc, properties);
+        this.add(data);
       });
     }));
   },
