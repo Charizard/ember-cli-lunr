@@ -23,5 +23,5 @@ export default function() {
     this.put('/posts/:id'); // or this.patch
     this.del('/posts/:id');
   */
-  this.post('/posts');
+  this.get('/posts');
 }

@@ -1,31 +1,51 @@
-import { visit } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+import { get } from '@ember/object';
+import { isEmpty } from '@ember/utils';
+import Lunr from 'ember-cli-lunr/lunr';
 
 module('Acceptance | model indexing', function(hooks) {
   setupApplicationTest(hooks);
   setupMirage(hooks);
 
-  test('index when a model is created', async function(assert) {
-    assert.expect(1);
-
+  test('index an array', async function(assert) {
     let store = this.owner.lookup('service:store');
-    let lunrService = this.owner.lookup('service:lunr');
 
-    lunrService.on('didIndexRecord', function() {
-      assert.ok(true, "creating a post indexes it");
-    });
+    assert.expect(2);
 
-    // This is to make sure the instance-initializer is run.
-    await visit('/');
-    let post = store.createRecord('post', {
-      title: "Sample title",
-      body: "sample body"
-    });
+    let posts = await store.findAll('post');
+    let lunr = Lunr.create({ models: posts });
 
-    await post.save();
+    assert.ok(!isEmpty(get(lunr, 'index')), "must create and store the index");
+    assert.deepEqual(get(lunr, 'index').fields, ["title", "body"], "must create and store the index with correct fields");
   });
 
-  // Test for when a model is updated and deleted
+  test('index an array passed along with properties', async function(assert) {
+    let store = this.owner.lookup('service:store');
+    let fields = ["title"];
+
+    assert.expect(2);
+
+    let posts = await store.findAll('post');
+    let lunr = Lunr.create({ models: posts, properties: fields });
+
+    assert.ok(!isEmpty(get(lunr, 'index')), "must create and store the index");
+    assert.deepEqual(get(lunr, 'index').fields, fields, "must create and store the index with correct fields");
+  });
+
+  test('can search an index', async function(assert) {
+    let store = this.owner.lookup('service:store');
+    let newPost = server.create('post', { title: 'sample title' });
+
+    assert.expect(2);
+
+    let allPosts = await store.findAll('post');
+    let lunr = Lunr.create({ models: allPosts });
+
+    let res = lunr.search('title');
+
+    assert.ok(!isEmpty(res), "must return a post");
+    assert.ok(res.mapBy('ref').includes(get(newPost, 'id')), "must include the created post");
+  });
 });
