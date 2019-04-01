@@ -78,3 +78,7 @@ export default Controller.extend({
   });
 });
 ```
+
+## Support
+
+Please leave a :star: to show some support. Thanks!
